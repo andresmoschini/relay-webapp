@@ -176,17 +176,14 @@
       jwtHelper,
       $locale) {
 
-    $rootScope.$on('$translateChangeEnd', function (e, data) {
-      // TODO: add NUMBER_FORMATS to our locale files and replace $locale based on them, getting them from $translate
-      if (data.language == "es") {
-          $locale.NUMBER_FORMATS.DECIMAL_SEP = ",";
-          $locale.NUMBER_FORMATS.GROUP_SEP = ".";
-        } else {
-          console.log("else");
-          $locale.NUMBER_FORMATS.DECIMAL_SEP = ".";
-          $locale.NUMBER_FORMATS.GROUP_SEP = ",";
-        }     
-    });
+    function applyCulture() {
+      $locale.NUMBER_FORMATS.DECIMAL_SEP = $translate.instant("NUMBER_FORMATS.DECIMAL_SEP");
+      $locale.NUMBER_FORMATS.GROUP_SEP = $translate.instant("NUMBER_FORMATS.GROUP_SEP");
+    }
+
+    applyCulture();
+
+    $rootScope.$on('$translateChangeEnd', applyCulture);
 
     $rootScope.$on('$locationChangeStart', function () {
       var queryParams = $location.search();
